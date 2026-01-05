@@ -5,17 +5,35 @@ CrAItor is a web-based creator platform that uses AI to analyze, verify, and eva
 # Key Platform Features
 
 ### AI-Based Category Verification
-Uploaded images are analyzed by AI to predict photography categories.
 <img width="266" height="314" alt="image" src="https://github.com/user-attachments/assets/5a487dcc-fe33-434a-a934-51f3431561b3" />
 
+Uploaded images are analyzed by AI to predict photography categories.
+
 ### AI-Verified Badge
-Posts receive an AI-Verified badge when the creator’s chosen category matches the AI prediction. Reduces misleading self-labeling and increases viewer trust.
+
 <img width="597" height="296" alt="image" src="https://github.com/user-attachments/assets/a302d7c8-df99-4853-be62-97c439222cfa" />
 
+Posts receive an AI-Verified badge when the creator’s chosen category matches the AI prediction. Reduces misleading self-labeling and increases viewer trust.
+
 ### Image Aesthetic Analysis Tool
-Generates an overall aesthetic score for uploaded images. Breaks down visual attributes like lighting, color harmony, composition, depth of field, symmetry, and sharpness. Helps creators understand strengths and areas for improvement.
 <img width="592" height="385" alt="image" src="https://github.com/user-attachments/assets/15219a0e-2cde-4985-931e-238d205660e4" />
 
+Generates an overall aesthetic score for uploaded images. Breaks down visual attributes like lighting, color harmony, composition, depth of field, symmetry, and sharpness. Helps creators understand strengths and areas for improvement.
+
+
+
 ### Caption Generator
-Lets users upload an image and instantly receive an AI-generated, Instagram-style caption. Users can edit, remove, or add tags to better match the mood or message they want to express.
 <img width="444" height="535" alt="image" src="https://github.com/user-attachments/assets/9b5a9df8-abcd-419e-8fe9-17134d8c0417" />
+
+Lets users upload an image and instantly receive an AI-generated, Instagram-style caption. Users can edit, remove, or add tags to better match the mood or message they want to express.
+
+# Platform
+### Portfolio Page
+
+<img width="401" height="256" alt="image" src="https://github.com/user-attachments/assets/5c9204ac-b922-4ef3-b7ac-cfd982a84d40" />
+
+### Explore Page
+
+<img width="596" height="490" alt="image" src="https://github.com/user-attachments/assets/ae43c868-2591-4ce7-8ef1-c1df7828d6c8" />
+
+
