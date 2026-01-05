@@ -1,0 +1,6 @@
+{
+  "effnet_model": "efficientnet_b0",
+  "effnet_weights": "DEFAULT",
+  "phi_model": "microsoft/phi-1_5",
+  "topk_labels": 5
+}
