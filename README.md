@@ -16,7 +16,8 @@ Uploaded images are analyzed by AI to predict photography categories.
 Posts receive an AI-Verified badge when the creator’s chosen category matches the AI prediction. Reduces misleading self-labeling and increases viewer trust.
 
 ### Image Aesthetic Analysis Tool
-<img width="592" height="385" alt="image" src="https://github.com/user-attachments/assets/15219a0e-2cde-4985-931e-238d205660e4" />
+<img width="910" height="527" alt="image" src="https://github.com/user-attachments/assets/4153cbd0-8706-4703-a5d0-234a097a4d38" />
+
 
 Generates an overall aesthetic score for uploaded images. Breaks down visual attributes like lighting, color harmony, composition, depth of field, symmetry, and sharpness. Helps creators understand strengths and areas for improvement.
 
@@ -35,5 +36,6 @@ Lets users upload an image and instantly receive an AI-generated, Instagram-styl
 ### Explore Page
 
 <img width="596" height="490" alt="image" src="https://github.com/user-attachments/assets/ae43c868-2591-4ce7-8ef1-c1df7828d6c8" />
+
 
 
