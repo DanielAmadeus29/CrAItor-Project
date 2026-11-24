@@ -33,7 +33,7 @@ function Register() {
     }
     
     try {
-      const response = await fetch('http://localhost:5000/api/register', {
+      const response = await fetch('http://localhost:5050/api/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -49,7 +49,7 @@ function Register() {
       const data = await response.json();
 
       if (response.ok) {
-        setMessage('Registration successful! 🎉');
+        setMessage('Registration successful!');
         setFormData({ fullName: '', email: '', username: '', password: '', confirmPassword: '' });
       } else {
         setMessage(data.error || 'Registration failed');
@@ -76,7 +76,7 @@ function Register() {
             </div>
           </div>
           <h1 className="title">CrAItor</h1>
-          <p className="subtitle">World of Creative Creator</p>
+          <p className="subtitle">Photo analysis toolkit</p>
         </div>
 
         {/* Form Card */}

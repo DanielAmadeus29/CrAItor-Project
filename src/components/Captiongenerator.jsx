@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useUser } from '../UserContexts';
 import Sidebar from './Sidebar';
+import { Upload } from 'lucide-react';
 import './Captiongenerator.css';
 
 function CaptionGenerator() {
@@ -10,6 +11,7 @@ function CaptionGenerator() {
   const [selectedImage, setSelectedImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [suggestedTags, setSuggestedTags] = useState([]);
+  const [rawLabels, setRawLabels] = useState([]);
   const [customTags, setCustomTags] = useState('');
   const [finalCaption, setFinalCaption] = useState('');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -97,6 +99,7 @@ function CaptionGenerator() {
       }
       
       setSuggestedTags(data.suggested_tags || []);
+      setRawLabels((data.raw_labels || []).map((l, i) => ({ label: l, p: data.scores?.[i] ?? 0 })));
       setStep('edit-tags');
     } catch (error) {
       console.error('Error analyzing image:', error);
@@ -158,6 +161,7 @@ function CaptionGenerator() {
     setSelectedImage(null);
     setImagePreview(null);
     setSuggestedTags([]);
+    setRawLabels([]);
     setCustomTags('');
     setFinalCaption('');
     setStep('upload');
@@ -189,15 +193,14 @@ function CaptionGenerator() {
       <div className="main-content">
         <div className="caption-generator-container">
           <div className="caption-header">
-            <button className="back-button" onClick={() => navigate('/aitools')}>
-              ← Back to AI Tools
+            <button className="back-button" onClick={() => navigate('/home')}>
+              ← Back to Overview
             </button>
             <div className="header-title">
-              <div className="header-icon">✨</div>
-              <h1>Dreamy Caption Generator</h1>
+              <h1>Tag-Conditioned Caption Generation</h1>
             </div>
             <p className="header-subtitle">
-              AI-powered soft, cozy, creative captions for your Instagram
+              Two-stage pipeline: EfficientNet-B0 image tagging followed by Phi-1.5 caption generation
             </p>
             <button className="about-model-button" onClick={() => setShowInfo(true)}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -222,7 +225,7 @@ function CaptionGenerator() {
                     onChange={handleImageSelect}
                     style={{ display: 'none' }}
                   />
-                  <div className="upload-icon">📸</div>
+                  <div className="upload-icon"><Upload size={40} strokeWidth={1.5} /></div>
                   <h3>Upload your photo</h3>
                   <p>Click to browse or drag and drop</p>
                   <p className="file-types">Supports: JPG, PNG, WEBP, GIF • Max 16MB</p>
@@ -254,17 +257,44 @@ function CaptionGenerator() {
                   <img src={imagePreview} alt="Preview" className="image-preview" />
                 </div>
 
-                <div className="tags-content">                 
+                <div className="tags-content">
+                  <div className="detected-block">
+                    <h3 className="input-label">Stage 1 output: cleaned tags</h3>
+                    <div className="tags-display-small">
+                      {suggestedTags.map((tag) => (
+                        <span key={tag} className="tag-small">{tag}</span>
+                      ))}
+                    </div>
+                    <button
+                      onClick={handleAcceptTags}
+                      className="btn-primary"
+                      disabled={isGenerating || suggestedTags.length === 0}
+                    >
+                      {isGenerating ? 'Generating…' : 'Generate from detected tags'}
+                    </button>
+                  </div>
 
+                  {rawLabels.length > 0 && (
+                    <details className="raw-labels">
+                      <summary>Raw ImageNet labels ({rawLabels.length}) with softmax probabilities</summary>
+                      <table>
+                        <tbody>
+                          {rawLabels.map(({ label, p }) => (
+                            <tr key={label} className={p < 0.05 ? 'below-threshold' : ''}>
+                              <td>{label}</td>
+                              <td>{p.toFixed(4)}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                      <p className="raw-note">Greyed rows fall below the 0.05 threshold and are dropped during cleaning.</p>
+                    </details>
+                  )}
 
                   <div className="tags-actions">
-                 
-                    
-                
-
                     <div className="custom-tags-input">
                       <label htmlFor="custom-tags" className="input-label">
-                        Customize your tags
+                        Replace tags (comma-separated)
                       </label>
                       <input
                         type="text"
@@ -280,7 +310,7 @@ function CaptionGenerator() {
                         className="btn-secondary"
                         disabled={isGenerating}
                       >
-                        Generate with Custom Tags
+                        Generate from these tags
                       </button>
                     </div>
 
@@ -316,7 +346,7 @@ function CaptionGenerator() {
                 <div className="caption-result">
                   <h2 className="section-title">Your Caption</h2>
                   <p className="section-subtitle">
-                    Soft, cozy, and dreamy — ready to share ✨
+                    Generated by Phi-1.5 from the tags listed below
                   </p>
 
                   <div className="caption-box">
@@ -362,7 +392,7 @@ function CaptionGenerator() {
         <div className="modal-overlay" onClick={() => setShowInfo(false)}>
           <div className="modal-content" onClick={e => e.stopPropagation()}>
             <div className="modal-header">
-              <h2>About This Model</h2>
+              <h2>About This Pipeline</h2>
               <button className="modal-close" onClick={() => setShowInfo(false)}>
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M18 6L6 18M6 6l12 12"/>
@@ -372,30 +402,30 @@ function CaptionGenerator() {
             
             <div className="modal-body">
               <div className="info-section">
-                <h3>🎨 How It Works</h3>
-                <p>This AI combines two powerful models:</p>
+                <h3>How It Works</h3>
+                <p>A two-stage pipeline:</p>
                 <ul>
-                  <li><strong>EfficientNet-B0</strong> - Analyzes your image and detects visual elements (tags)</li>
-                  <li><strong>Phi-1.5</strong> - Generates soft, cozy, creative captions based on the tags</li>
+                  <li><strong>EfficientNet-B0</strong> (ImageNet-1k): top-15 labels, cleaned to at most 8 tags</li>
+                  <li><strong>Phi-1.5</strong> (1.3B parameters): writes a caption conditioned on the tags</li>
                 </ul>
               </div>
 
               <div className="info-section">
-                <h3>✨ Caption Style</h3>
-                <p>Our captions are:</p>
+                <h3>Prompting and Decoding</h3>
+                <p>Generation settings:</p>
                 <ul>
-                  <li>Soft, warm, and dreamy</li>
-                  <li>Under 18 words</li>
-                  <li>Emotional and aesthetic</li>
-                  <li>Perfect for Instagram</li>
+                  <li>Few-shot prompt with 3 tags-to-caption examples; the top 6 tags are inserted</li>
+                  <li>Instructed to describe the content accurately in under 20 words</li>
+                  <li>Sampling: temperature 0.7, top-p 0.92, top-k 50, repetition penalty 1.2</li>
+                  <li>Output truncated to the first line and at most 25 words</li>
                 </ul>
               </div>
 
               <div className="info-section">
-                <h3>🔧 Customization</h3>
+                <h3>Customization</h3>
                 <p>
-                  You can accept the AI-suggested tags or customize them to better match your vision. 
-                  Custom tags give you more control over the caption's theme and style.
+                  The language model only sees the tags, never the image. Replacing the detected tags
+                  lets you examine how the tag set alone determines the caption.
                 </p>
               </div>
 
@@ -408,8 +438,8 @@ function CaptionGenerator() {
                 <div>
                   <strong>Note</strong>
                   <p>
-                    AI-generated captions are creative suggestions. Feel free to edit and personalize 
-                    them to match your unique voice and style!
+                    Captions are sampled, so the same tags can produce different text. Accuracy is
+                    bounded by the ImageNet-1k tag vocabulary.
                   </p>
                 </div>
               </div>

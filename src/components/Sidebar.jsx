@@ -1,6 +1,25 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
+import {
+  BookOpen,
+  ScanSearch,
+  Sparkles,
+  MessageSquareText,
+  LogOut,
+} from 'lucide-react';
 import { useUser } from '../UserContexts';
-import './Sidebar.css'; // Make sure you have your CSS file
+import './Sidebar.css';
+
+const SECTIONS = [
+  {
+    title: 'Tools',
+    links: [
+      { to: '/home', label: 'Overview', icon: BookOpen },
+      { to: '/classification', label: 'Genre Classification', icon: ScanSearch },
+      { to: '/imageaesthetic', label: 'Aesthetic Assessment', icon: Sparkles },
+      { to: '/captiongenerator', label: 'Caption Generation', icon: MessageSquareText },
+    ],
+  },
+];
 
 function Sidebar() {
   const { user, logout } = useUser();
@@ -12,37 +31,38 @@ function Sidebar() {
   };
 
   return (
-    <div className="sidebar">
+    <aside className="sidebar">
       <div className="sidebar-header">
         <h3>CrAItor</h3>
-        {user && <p>Welcome, @{user.username}!</p>}
+        <p className="sidebar-subtitle">Photo analysis toolkit</p>
       </div>
-      
+
       <nav className="sidebar-nav">
-        <Link to="/home" className="nav-link">
-          Home
-        </Link>
-        <Link to="/explore" className="nav-link">
-          Explore
-        </Link>
-        <Link to="/AITools" className="nav-link">
-          AI Tools
-        </Link>
-        <Link to="/Portfolio" className="nav-link">
-          Portfolio
-        </Link>
-        <Link to="/profile" className="nav-link">
-          Profile
-        </Link>
-        {/* Add more navigation links as needed */}
+        {SECTIONS.map((section) => (
+          <div key={section.title} className="nav-section">
+            <p className="nav-section-title">{section.title}</p>
+            {section.links.map(({ to, label, icon: Icon }) => (
+              <NavLink
+                key={to}
+                to={to}
+                className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}
+              >
+                <Icon size={17} strokeWidth={1.8} />
+                <span>{label}</span>
+              </NavLink>
+            ))}
+          </div>
+        ))}
       </nav>
-      
+
       <div className="sidebar-footer">
+        {user && <p className="sidebar-user">Signed in as @{user.username}</p>}
         <button onClick={handleLogout} className="logout-btn">
-          Logout
+          <LogOut size={16} strokeWidth={1.8} />
+          Log out
         </button>
       </div>
-    </div>
+    </aside>
   );
 }
 

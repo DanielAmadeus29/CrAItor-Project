@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useUser } from '../UserContexts';
 import Sidebar from './Sidebar';
+import { Upload } from 'lucide-react';
 import './ImageAesthetic.css';
 
 function ImageAesthetic() {
@@ -203,22 +204,7 @@ function ImageAesthetic() {
     return '#e74c3c';
   };
 
-  const getScoreGrade = (score) => {
-    const numScore = parseFloat(score);
-    if (numScore >= 0.9) return 'A+';
-    if (numScore >= 0.8) return 'A';
-    if (numScore >= 0.7) return 'B+';
-    if (numScore >= 0.6) return 'B';
-    if (numScore >= 0.5) return 'C';
-    return 'D';
-  };
 
-  // Helper function to normalize score for display (handles negative values)
-  const normalizeScoreForDisplay = (score) => {
-    const numScore = parseFloat(score);
-    // Clamp between 0 and 100 for display purposes
-    return Math.max(0, Math.min(100, numScore * 100));
-  };
 
   if (!user) {
     return (
@@ -234,15 +220,14 @@ function ImageAesthetic() {
       <div className="main-content">
         <div className="image-aesthetic-container">
           <div className="aesthetic-header">
-            <button className="back-button" onClick={() => navigate('/aitools')}>
-              ← Back to AI Tools
+            <button className="back-button" onClick={() => navigate('/home')}>
+              ← Back to Overview
             </button>
             <div className="header-title">
-              <div className="header-icon">🎨</div>
-              <h1>Image Aesthetic Analysis</h1>
+              <h1>Image Aesthetic Assessment</h1>
             </div>
             <p className="header-subtitle">
-              Advanced AI-powered aesthetic quality assessment using deep learning
+              EfficientNet-B0 multi-task model trained on AADB. Predicts an overall aesthetic score in [0, 1] and eleven photographic attribute scores in [−1, +1].
             </p>
             <button className="about-model-button" onClick={() => setShowInfo(true)}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -267,7 +252,7 @@ function ImageAesthetic() {
                     onChange={handleImageSelect}
                     style={{ display: 'none' }}
                   />
-                  <div className="upload-icon">📸</div>
+                  <div className="upload-icon"><Upload size={40} strokeWidth={1.5} /></div>
                   <h3>Choose an image</h3>
                   <p>Click to browse or drag and drop</p>
                   <p className="file-types">Supports: JPG, PNG, WEBP, GIF • Max 16MB</p>
@@ -331,7 +316,7 @@ function ImageAesthetic() {
                       <div className="score-header">
                         <h2>Overall Aesthetic Score</h2>
                         <span className="score-category" style={{ color: results.category.color }}>
-                          {results.category.emoji} {results.category.name}
+                          {results.category.name}
                         </span>
                       </div>
                       
@@ -347,7 +332,6 @@ function ImageAesthetic() {
                         
                         <div className="score-details">
                           <div className="score-percentage">{results.percentage}%</div>
-                          <div className="score-grade">Grade: {getScoreGrade(results.overallScore)}</div>
                         </div>
                       </div>
                     </div>
@@ -356,8 +340,8 @@ function ImageAesthetic() {
                     <div className="highlights-section">
                       <div className="highlight-card strengths-card">
                         <h3>
-                          <span className="icon">💪</span>
-                          Strongest Attributes
+                          
+                          Highest attribute scores
                         </h3>
                         <div className="highlight-list">
                           {results.topAttributes.map((attr, index) => (
@@ -373,8 +357,8 @@ function ImageAesthetic() {
 
                       <div className="highlight-card weaknesses-card">
                         <h3>
-                          <span className="icon">⚠️</span>
-                          Areas for Improvement
+                          
+                          Lowest attribute scores
                         </h3>
                         <div className="highlight-list">
                           {results.bottomAttributes.map((attr, index) => (
@@ -458,8 +442,8 @@ function ImageAesthetic() {
                   <line x1="12" y1="17" x2="12.01" y2="17"/>
                 </svg>
                 <div>
-                  <strong>Important Notice</strong>
-                  <p>This model is trained on the AADB (Aesthetic Visual Analysis) dataset. Results are <strong>not 100% accurate</strong> and should be used as a reference only, not as definitive judgments of image quality.</p>
+                  <strong>Interpretation</strong>
+                  <p>This model is trained on the AADB (Aesthetics and Attributes Database, Kong et al., 2016). Predictions approximate the average rater judgement in that dataset; validation MAE is 0.117 for the overall score and 0.185 averaged over the attributes.</p>
                 </div>
               </div>
 

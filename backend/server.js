@@ -9,7 +9,7 @@ const axios = require('axios');
 require('dotenv').config();
 
 const app = express();
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 5050;
 
 // AI Server URL
 const AI_SERVER_URL = 'http://localhost:5001';
@@ -648,7 +648,15 @@ app.delete('/api/posts/:id', async (req, res) => {
   }
 });
 
-app.listen(port, () => {
+app.listen(port, (err) => {
+  if (err) {
+    console.error(`❌ Failed to start server on port ${port}:`, err.message);
+    if (err.code === 'EADDRINUSE') {
+      console.error('   Port is in use. On macOS, port 5000 is used by AirPlay Receiver');
+      console.error('   (System Settings → General → AirDrop & Handoff → AirPlay Receiver: off).');
+    }
+    process.exit(1);
+  }
   console.log(`\n🚀 Server running on http://localhost:${port}`);
   console.log(`📡 AI Server expected at: ${AI_SERVER_URL}`);
   console.log(`\nEndpoints available:`);

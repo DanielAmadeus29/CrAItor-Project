@@ -28,9 +28,9 @@ function Login() {
     console.log('Attempting login with:', formData.username);
     
     try {
-      console.log('Sending request to:', 'http://localhost:5000/api/login');
+      console.log('Sending request to:', 'http://localhost:5050/api/login');
       
-      const response = await fetch('http://localhost:5000/api/login', {
+      const response = await fetch('http://localhost:5050/api/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -79,7 +79,7 @@ function Login() {
             </div>
           </div>
           <h1 className="title">CrAItor</h1>
-          <p className="subtitle">Welcome Back!</p>
+          <p className="subtitle">Photo analysis toolkit</p>
         </div>
 
         {/* Form Card */}
